@@ -1,11 +1,11 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
-use async_closure::{async_closure_once, capture_lifetime::AsyncFnOnce};
+use async_closure::{async_closure_once, capture_lifetimes::AsyncFnOnce};
 use futures::future::ready;
 
 async fn take_a_closure<'a, T, F>(cb: F) -> T
 where
-    F: for<'s> AsyncFnOnce<'a, (&'s str,), T>,
+    F: for<'s> AsyncFnOnce<'a, (&'s str,), Output = T>,
 {
     let s = String::from("-");
     let args = (&s[..],);
@@ -55,7 +55,7 @@ async fn fn_once() {
 
 async fn take_another_closure<'a, T, F>(cb: F) -> T
 where
-    F: for<'s> AsyncFnOnce<'a, (&'s str, &'s mut String), T>,
+    F: for<'s> AsyncFnOnce<'a, (&'s str, &'s mut String), Output = T>,
 {
     let s1 = String::from("-");
     let mut s2 = String::from("-");

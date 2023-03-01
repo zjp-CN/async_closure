@@ -2,8 +2,31 @@
 #![feature(unboxed_closures)]
 #![feature(type_alias_impl_trait)]
 
-use async_closure::async_closure;
 use core::future::Future;
+
+#[macro_export]
+macro_rules! async_closure {
+    (
+        { $( $field:ident : $t:ty  = $init:expr ),+ };
+        ( $( $args:ident ),+ , );
+        $e:expr
+    ) => {{
+        struct __AsyncClosure {
+            $( $field: $t ),+
+        }
+        impl<'a> ::core::ops::FnOnce<(&'a str,)> for __AsyncClosure {
+            type Output = impl 'a + core::future::Future<Output = usize>;
+            extern "rust-call" fn call_once(self, args: (&'a str,)) -> Self::Output {
+                let Self { $( $field ),+ } = self;
+                #[allow(unused_parens)]
+                let ( $( $args ),+ , ) = args;
+                async move { $e }
+            }
+        }
+        #[allow(clippy::redundant_field_names)]
+        __AsyncClosure { $($field: $init),+ }
+    }};
+}
 
 #[tokio::test]
 async fn async_callback() {
@@ -81,12 +104,4 @@ where
 {
     let string = String::from("Hello World");
     f(&string).await
-}
-
-async fn call_mut<T, F>(f: F) -> T
-where
-    F: for<'a> AsyncFn<'a, T>,
-{
-    let mut string = String::from("Hello World");
-    f(&mut string).await
 }

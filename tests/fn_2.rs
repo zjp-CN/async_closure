@@ -1,6 +1,6 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
-use async_closure::{async_owned_closure, capture_no_lifetime::AsyncFn};
+use async_closure::{async_owned_closure, capture_no_lifetimes::AsyncFn};
 
 async fn take_a_closure<T, F>(accessor: F) -> T
 where

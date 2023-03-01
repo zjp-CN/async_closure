@@ -1,6 +1,6 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
-use async_closure::{async_owned_closure_mut, capture_no_lifetime::AsyncFnMut};
+use async_closure::{async_owned_closure_mut, capture_no_lifetimes::AsyncFnMut};
 
 async fn take_a_closure<T, F>(mut accessor: F) -> T
 where
