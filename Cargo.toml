@@ -2,6 +2,12 @@
 name = "async_closure"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+exclude = ["tests/", "examples/"]
+keywords = ["macros"]
+categories = ["asynchronous"]
+repository = "https://github.com/zjp-CN/async_closure"
+description = "This crate utilizes the nightly-only feature async_fn_in_trait to imitate async_closures."
 
 [dependencies]
 
