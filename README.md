@@ -11,12 +11,12 @@ The steps to use this crate:
     * otherwise, use traits in [`capture_lifetimes`] mod.
 
     ```rust,ignore
-    // e.g. take a closure that potentially captures references and will only be used once.
+    // e.g. take a closure that potentially captures references and will change its states.
 
-    // 0. import the `AsyncFnOnce` trait and companion macro `async_closure`
+    // 0. import the `AsyncFnMut` trait and companion macro `async_closure_mut`
     #![feature(async_fn_in_trait)]
     #![allow(incomplete_features)]
-    use async_closure::{capture_lifetimes::AsyncFnOnce, async_closure};
+    use async_closure::{capture_lifetimes::AsyncFnMut, async_closure_mut};
 
     // 1. Adjust your caller where the trait bound looks like the following
     async fn take_a_mut_closure<'env, T, F>(mut cb: F) -> T
