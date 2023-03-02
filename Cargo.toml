@@ -14,3 +14,4 @@ description = "This crate utilizes the nightly-only feature async_fn_in_trait to
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
 futures = "0.3"
+paste = "1"

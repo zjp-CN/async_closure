@@ -1,75 +1,144 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
 
+macro_rules! with_lifetime {
+    ($fn:ident, $trait:ident, $mac:ident, $b:block) => {
+        pub async fn $fn() {
+            use async_closure::$mac as cb;
+            async fn check<'env, F, Args, Out>(_: F)
+            where
+                F: imp::$trait<'env, Args, Output = Out>,
+            {
+            }
+            $b;
+        }
+    };
+}
+
+macro_rules! check {
+    ($check:ident, $fn_prefix:ident, $b:block) => {
+        check! { @once $check, $fn_prefix, $b }
+        check! { @mut $check, $fn_prefix, $b }
+        check! { @fn $check, $fn_prefix, $b }
+    };
+    (@once $check:ident, $fn_prefix:ident, $b:block) => {
+        ::paste::paste! { $check! { [< $fn_prefix _once >], AsyncFnOnce, async_closure_once, $b } }
+    };
+    (@mut $check:ident, $fn_prefix:ident, $b:block) => {
+        ::paste::paste! { $check! { [< $fn_prefix _mut >], AsyncFnMut, async_closure_mut, $b } }
+    };
+    (@fn $check:ident, $fn_prefix:ident, $b:block) => {
+        ::paste::paste! { $check! { [< $fn_prefix _fn >], AsyncFn, async_closure, $b } }
+    };
+}
+
 mod referenced {
-    mod caller {
-        use async_closure::capture_lifetimes as imp;
+    use async_closure::capture_lifetimes as imp;
 
-        pub async fn take_once<'env, T, F>(f: F) -> T
-        where
-            F: imp::AsyncFnOnce<'env, (), Output = T>,
-        {
-            f.call_once(()).await
-        }
-        pub async fn take_mut<'env, T, F>(f: F) -> T
-        where
-            F: imp::AsyncFnMut<'env, (), Output = T>,
-        {
-            f.call_once(()).await
-        }
-        pub async fn take_ref<'env, T, F>(f: F) -> T
-        where
-            F: imp::AsyncFn<'env, (), Output = T>,
-        {
-            f.call_once(()).await
-        }
-        pub async fn check_once<'env, F, Args, Out>(_: F)
-        where
-            F: imp::AsyncFnOnce<'env, Args, Output = Out>,
-        {
-        }
-    }
+    check!(with_lifetime, simple, {
+        // Empty fields and args are supported, though it's meaningless
+        check::<_, (), ()>(cb!({}; async | | -> () {})).await;
 
-    mod test {
-        use super::caller;
-        pub async fn take_once() {
-            use async_closure::async_closure_once as cb;
+        let v = vec![];
+        check::<_, (), usize>(cb!({
+            v: &'a [u8] = &v,
+        }; async | | -> usize { v.len() }))
+        .await;
 
-            caller::take_once(cb!({}; async | | -> () {})).await;
+        check::<_, (usize,), usize>(cb!({
+            v: &'a [u8] = &v,
+        }; async |u: usize| -> usize { v.len() + u }))
+        .await;
 
-            let v = vec![];
-            caller::take_once(cb!({
-                v: &'a [u8] = &v,
-            }; async | | -> usize { v.len() }))
-            .await;
-        }
-        pub async fn check_once() {
-            use async_closure::async_closure_once as cb;
-            use caller::check_once as check;
+        check::<_, (usize,), usize>(cb!({
+            v: Vec<u8> = v,
+        }; async |u: usize| -> usize { v.len() + u }))
+        .await;
+    });
 
-            check::<_, (), ()>(cb!({}; async | | -> () {})).await;
+    check!(@once with_lifetime, mutate_state, {
+        let mut v = vec![];
 
-            let v = vec![];
-            check::<_, (), usize>(cb!({
-                v: &'a [u8] = &v,
-            }; async | | -> usize { v.len() }))
-            .await;
+        check::<_, (), usize>(cb!({
+            v: &'a mut Vec<u8> = &mut v,
+        }; async | | -> usize {
+            // to show the type; you don't have to do this
+            let v: &mut Vec<u8> = v;
+            v.push(0);
+            v.len()
+        }))
+        .await;
 
-            check::<_, (usize,), usize>(cb!({
-                v: &'a [u8] = &v,
-            }; async |u: usize| -> usize { v.len() + u }))
-            .await;
+        check::<_, (), usize>(cb!({
+            v: Vec<u8> = v,
+        }; async | | -> usize {
+            // rebinding is a must to mutate it
+            let mut v: Vec<u8> = v;
+            v.push(0);
+            v.len()
+        }))
+        .await;
+    });
 
-            check::<_, (usize,), usize>(cb!({
-                v: Vec<u8> = v,
-            }; async |u: usize| -> usize { v.len() + u }))
-            .await;
-        }
-    }
+    check!(@mut with_lifetime, mutate_state, {
+        let mut v = vec![];
+
+        check::<_, (), usize>(cb!({
+            v: &'a mut Vec<u8> = &mut v,
+        }; async | | -> usize {
+            let v: &mut &mut Vec<u8> = v;
+            v.push(0);
+            v.len()
+        }))
+        .await;
+
+        check::<_, (), usize>(cb!({
+            v: Vec<u8> = v,
+        }; async | | -> usize {
+            let v: &mut Vec<u8> = v;
+            v.push(0);
+            v.len()
+        }))
+        .await;
+    });
+
+    check!(@fn with_lifetime, no_mutation, {
+        check::<_, (), usize>(cb!({
+            v: &'a [u8] = &[],
+        }; async | | -> usize {
+            let v: &&[u8] = v;
+            v.len()
+        }))
+        .await;
+
+        // both types with 'static lifetime
+        check::<_, (), usize>(cb!({
+            v: &'static [u8] = &[],
+        }; async | | -> usize {
+            let v: &&[u8] = v;
+            v.len()
+        }))
+        .await;
+
+        // and types without lifetime parameter
+        // can be successfully captured
+        check::<_, (), usize>(cb!({
+            v: Vec<u8> = vec![],
+        }; async | | -> usize {
+            let v: &Vec<u8> = v;
+            v.len()
+        }))
+        .await;
+    });
 
     pub async fn tests() {
-        test::take_once().await;
-        test::check_once().await;
+        simple_once().await;
+        simple_mut().await;
+        simple_fn().await;
+
+        mutate_state_once().await;
+        mutate_state_mut().await;
+        no_mutation_fn().await;
     }
 }
 
