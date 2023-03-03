@@ -2,7 +2,7 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/zjp-CN/async_closure)](https://github.com/zjp-CN/async_closure)
 [<img alt="github" src="https://img.shields.io/github/issues/zjp-CN/async_closure?color=db2043" height="20">](https://github.com/zjp-CN/async_closure/issues)
-[<img alt="build status" src="https://github.com/zjp-CN/async_closure/workflows/Release%20CI/badge.svg" height="20">](https://github.com/zjp-CN/async_closure/actions)
+[![test suite](https://github.com/zjp-CN/async_closure/actions/workflows/ci.yml/badge.svg)](https://github.com/zjp-CN/async_closure/actions/workflows/ci.yml)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/async_closure?style=flat&color=fc8d62&logo=rust&label=async_closure" height="20">](https://crates.io/crates/async_closure)
 [<img alt="docs.rs" src="https://img.shields.io/docsrs/async_closure" height="20">](https://docs.rs/async_closure)
 
