@@ -34,11 +34,11 @@ async fn async_callback() {
     let sleep = 1usize;
     let cb = async_closure!({
         s: String = string,
-        secs: u64 = sleep as _
+        millis: u64 = sleep as _
     }; (arg, ); {
         println!("The first captured variable is {s:?}");
-        println!("Sleep for {secs} secs");
-        tokio::time::sleep(tokio::time::Duration::from_secs(secs)).await;
+        println!("Sleep for {millis} millis");
+        tokio::time::sleep(tokio::time::Duration::from_millis(millis)).await;
         s.len() + arg.len()
     });
     let len = call(cb).await;
@@ -53,7 +53,7 @@ async fn fn_mut() {
         #[derive(Clone)]
         struct __AsyncClosure {
             s: String,
-            secs: u64,
+            millis: u64,
         }
         type Fut<'a> = impl 'a + core::future::Future<Output = usize>;
         impl<'a> ::core::ops::FnOnce<(&'a str,)> for __AsyncClosure {
@@ -64,14 +64,14 @@ async fn fn_mut() {
         }
         impl<'a> ::core::ops::FnMut<(&'a str,)> for __AsyncClosure {
             extern "rust-call" fn call_mut(&mut self, args: (&'a str,)) -> Fut<'a> {
-                let Self { s, secs } = self.clone();
+                let Self { s, millis } = self.clone();
                 #[allow(unused_parens)]
                 let (arg,) = args;
                 async move {
                     {
                         println!("The first captured variable is {s:?}");
-                        println!("Sleep for {secs} secs");
-                        tokio::time::sleep(tokio::time::Duration::from_secs(secs)).await;
+                        println!("Sleep for {millis} millis");
+                        tokio::time::sleep(tokio::time::Duration::from_millis(millis)).await;
                         s.len() + arg.len()
                     }
                 }
@@ -80,7 +80,7 @@ async fn fn_mut() {
         #[allow(clippy::redundant_field_names)]
         __AsyncClosure {
             s: string,
-            secs: sleep as _,
+            millis: sleep as _,
         }
     };
     let len = call(cb).await;
