@@ -1,6 +1,10 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
 
+async fn ready<T>(t: T) -> T {
+    t
+}
+
 async fn access<'a, T, F>(accessor: F) -> T
 where
     F: AsyncFnonce<'a, T>,
@@ -14,7 +18,7 @@ trait AsyncFnOnce<'a, In, Out> {
 }
 impl<'s> AsyncFnOnce<'s, &str, usize> for Cb<'s> {
     async fn call(self, message: &str) -> usize {
-        futures::future::ready(self.s).await;
+        ready(self.s).await;
         self.s.len() + message.len()
     }
 }
@@ -35,7 +39,7 @@ struct Cb<'s> {
 }
 impl<'s> AsyncFnonce<'s, usize> for Cb<'s> {
     async fn call(self, message: &str) -> usize {
-        futures::future::ready(self.s).await;
+        ready(self.s).await;
         self.s.len() + message.len()
     }
 }
@@ -46,7 +50,7 @@ struct Cb2<'s> {
 }
 impl<'s> AsyncFnonce<'s, &'s str> for Cb2<'s> {
     async fn call(self, message: &str) -> &'s str {
-        futures::future::ready(message.len() + self.u).await;
+        async { message.len() + self.u }.await;
         self.s
     }
 }
@@ -63,7 +67,7 @@ async fn test_access() {
     assert_eq!(s, "+");
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }

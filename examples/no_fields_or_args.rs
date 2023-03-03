@@ -246,7 +246,7 @@ mod owned {
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     referenced::tests().await;
     owned::tests().await;

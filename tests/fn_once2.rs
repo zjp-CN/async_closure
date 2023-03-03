@@ -1,6 +1,10 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
 
+async fn ready<T>(t: T) -> T {
+    t
+}
+
 async fn take_a_closure<T, F>(accessor: F) -> T
 where
     F: for<'a> AsyncFnOnce<(&'a str,), Output = T>,
@@ -28,19 +32,19 @@ struct Cb {
 impl AsyncFnOnce<(&str,)> for Cb {
     type Output = usize;
     async fn call_once(self, args: (&str,)) -> usize {
-        futures::future::ready(self.s.clone()).await;
+        ready(self.s.clone()).await;
         self.s.len() + args.0.len()
     }
 }
 impl AsyncFnMut<(&str,)> for Cb {
     async fn call_mut(&mut self, args: (&str,)) -> usize {
-        futures::future::ready(self.s.clone()).await;
+        ready(self.s.clone()).await;
         self.s.len() + args.0.len()
     }
 }
 impl AsyncFn<(&str,)> for Cb {
     async fn call(&self, args: (&str,)) -> usize {
-        futures::future::ready(self.s.clone()).await;
+        ready(self.s.clone()).await;
         self.s.len() + args.0.len()
     }
 }
@@ -52,7 +56,7 @@ async fn test_access() {
     assert_eq!(n, 2);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }

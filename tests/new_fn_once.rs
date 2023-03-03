@@ -1,7 +1,10 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
 use async_closure::{async_closure_once, capture_lifetimes::AsyncFnOnce};
-use futures::future::ready;
+
+async fn ready<T>(t: T) -> T {
+    t
+}
 
 async fn take_a_closure<'a, T, F>(cb: F) -> T
 where
@@ -47,7 +50,7 @@ async fn test() {
     assert_eq!(buf, "+123-");
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn fn_once() {
     test().await;
     test2().await;

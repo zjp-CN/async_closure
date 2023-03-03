@@ -36,7 +36,7 @@ mod case1 {
 
 // src: https://users.rust-lang.org/t/how-to-express-that-the-future-returned-by-a-closure-lives-only-as-long-as-its-argument/90039
 mod case2 {
-    use tokio::sync::RwLock;
+    use async_lock::RwLock;
 
     async fn access<T, F>(data: &RwLock<String>, accessor: F) -> T
     where
@@ -58,7 +58,7 @@ mod case2 {
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     case1::test().await;
     case2::test().await;

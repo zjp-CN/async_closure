@@ -24,7 +24,7 @@ where F: for<'any> AsyncFnOnce<(&'any str,), Output = T>
     f.call_once(args).await
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let mut context = String::new();
 
@@ -77,7 +77,7 @@ where F: for<'any> AsyncFnOnce<(&'any str,), Output = String>
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let mut context = String::new();
 

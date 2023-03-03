@@ -1,13 +1,16 @@
 #![feature(async_fn_in_trait)]
 #![allow(incomplete_features)]
 // use async_closure::capture_lifetimes::AsyncFnMut;
-use std::{error::Error, sync::Arc};
+use std::sync::Arc;
 
 use async_closure::{
     async_closure_mut, async_closure_once,
     capture_lifetimes::{AsyncFnMut, AsyncFnOnce},
 };
-use futures::future::ready;
+
+async fn ready<T>(t: T) -> T {
+    t
+}
 
 async fn take_a_closure<'a, T, F>(cb: F) -> T
 where
@@ -45,13 +48,13 @@ async fn test3() {
         buf: &'a mut String = &mut buf, // mutable reference
         arc: Arc<str> = buffer.into(),  // owned type without explicit mutation
         len: usize = 0,                 // owned type with mutation, see the code below
-    }; async |arg: &str| -> Result<usize, Box<dyn Error>> {
+    }; async |arg: &str| -> Result<usize, ()> {
         // Write async code here, using the field names and argument names as variables
 
-        tokio::spawn({
+        {
             let arc = arc.clone();
-            async move { arc }
-        }).await?;
+            async { Ok::<_, ()>(arc) }
+        }.await?;
         buf.push_str(arg);
         dbg!(&arc, &buf, &s, &arg);
         *len += arc.len() + buf.len() + s.len() + arg.len();
@@ -118,7 +121,7 @@ async fn test() {
     assert_eq!(buf, "+123-");
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     test().await;
     test2().await;

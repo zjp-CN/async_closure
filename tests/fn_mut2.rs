@@ -35,7 +35,7 @@ async fn test_access() {
     assert_eq!(n, 3);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }

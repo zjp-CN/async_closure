@@ -3,7 +3,7 @@
 
 mod referenced {
     use async_closure::{async_closure_mut, capture_lifetimes::AsyncFnMut};
-    use tokio::sync::{Mutex, MutexGuard};
+    use async_lock::{Mutex, MutexGuard};
 
     struct S {
         mutex: Mutex<Vec<u8>>,
@@ -75,7 +75,7 @@ mod referenced {
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     referenced::test().await;
 }

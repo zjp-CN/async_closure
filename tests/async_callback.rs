@@ -28,7 +28,7 @@ macro_rules! async_closure {
     }};
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn async_callback() {
     let string = String::from("Context");
     let sleep = 1usize;
@@ -38,14 +38,14 @@ async fn async_callback() {
     }; (arg, ); {
         println!("The first captured variable is {s:?}");
         println!("Sleep for {millis} millis");
-        tokio::time::sleep(tokio::time::Duration::from_millis(millis)).await;
+        async { millis }.await;
         s.len() + arg.len()
     });
     let len = call(cb).await;
     assert_eq!(len, 18);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn fn_mut() {
     let string = String::from("Context");
     let sleep = 1usize;
@@ -71,7 +71,7 @@ async fn fn_mut() {
                     {
                         println!("The first captured variable is {s:?}");
                         println!("Sleep for {millis} millis");
-                        tokio::time::sleep(tokio::time::Duration::from_millis(millis)).await;
+                        async { millis }.await;
                         s.len() + arg.len()
                     }
                 }

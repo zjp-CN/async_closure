@@ -20,7 +20,7 @@ struct Cb<'s> {
 
 impl<'s> AsyncFnMut<'s, usize> for Cb<'s> {
     async fn call(&mut self, message: &str) -> usize {
-        futures::future::ready(&*self.s).await;
+        async { &*self.s }.await;
         self.s.push_str(message);
         self.s.len()
     }
@@ -32,7 +32,7 @@ async fn test_access() {
     assert_eq!(n, 3);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }

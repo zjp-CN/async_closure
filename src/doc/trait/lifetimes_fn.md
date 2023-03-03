@@ -26,7 +26,7 @@ where F: for<'any> AsyncFn<'env, (&'any str,), Output = T>
     (f.call(("there!",)).await, f)
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let context = Mutex::new(String::new());
 
@@ -89,7 +89,7 @@ where F: for<'any> AsyncFn<'env, (&'any str,), Output = &'env Mutex<String>>
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let context = Mutex::new(String::new());
 

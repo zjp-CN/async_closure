@@ -25,7 +25,7 @@ where F: for<'any> AsyncFnMut<'env, (&'any str,), Output = T>
     (f.call_mut(("there!",)).await, f)
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let mut context = String::new();
 
@@ -86,7 +86,7 @@ where F: for<'any> AsyncFnMut<'env, (&'any str,), Output = ()>
     }
 }
 
-#[tokio::main]
+#[pollster::main]
 async fn main() {
     let mut context = String::new();
 

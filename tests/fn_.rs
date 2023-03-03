@@ -21,7 +21,7 @@ struct Cb<'s> {
 
 impl<'s> AsyncFn<'s, usize> for Cb<'s> {
     async fn call(&self, message: &str) -> usize {
-        futures::future::ready(self.s).await;
+        async move { self.s }.await;
         self.s.len() + message.len()
     }
 }
@@ -32,7 +32,7 @@ async fn test_access() {
     assert_eq!(n, 2);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }

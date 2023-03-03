@@ -26,10 +26,8 @@ async fn test_access() {
     let cb = async_owned_closure!({
         outer: std::sync::Arc<str> = outer.into()
     }; async |s: &str| -> Result<usize, Box<dyn std::error::Error>> {
-        let new_str = tokio::spawn({
-            let outer = outer.clone();
-            async move { outer }
-        }).await?;
+        let outer2 = outer.clone();
+        let new_str = async move { Ok::<_, String>(outer2) }.await?;
         Ok(new_str.len() + outer.len() + s.len())
     });
     let cb_new = take_and_return_a_closure(cb).await;
@@ -38,7 +36,7 @@ async fn test_access() {
     assert_eq!(n.unwrap(), 3);
 }
 
-#[tokio::test]
+#[pollster::test]
 async fn test() {
     test_access().await;
 }
