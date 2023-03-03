@@ -38,7 +38,7 @@ The steps to use this crate:
     ```
 
 2. Use its companion macro to auto generate a value, the type of which is distinct and unnamed
-   but implmented with the trait. The syntax in macros contains two parts:
+   but implemented with the trait. The syntax in macros contains two parts:
     * For capture_lifetimes style macros:
         1. a block `{}` where multiple assignments `field_name: field_type = field_value` seperated by `,` are declared
         2. an async closure `async |arg1: arg1_type, ...| -> return_type { /* any async code here */ }`
@@ -101,7 +101,7 @@ The steps to use this crate:
   
   1. Requirement for Rust?
 
-  MVRV: v1.69.0, and nightly-only due to [`async_fn_in_trait`].
+  MSRV: v1.69.0, and nightly-only due to the [`async_fn_in_trait`] feature.
 
   2. Why do I need this?
 
@@ -148,7 +148,7 @@ The steps to use this crate:
   3. How to work on stable Rust?
 
   Impossible for now. See the second question above that gives a link to show traditional *well-known* stable ways,
-  especially for non-capturing async callbacks.
+  especially for non-capturing async callbacks/functions.
 
 </details>
 

@@ -1,16 +1,32 @@
+//! Traits that can be written in trait bounds on the callers of
+//! async closures **without temporary lifetimes**.
+
+/// The type implemented with this trait can be only used once
+/// with its states obtained **by value**.
+#[doc = include_str!("./doc/trait/no_lifetimes_fnonce.md")]
 pub trait AsyncFnOnce<In> {
     type Output;
     async fn call_once(self, args: In) -> Self::Output;
 }
 
+/// The type implemented with this trait can be used multiple
+/// times with its states obtained by **exclusive** references.
+#[doc = include_str!("./doc/trait/no_lifetimes_fnmut.md")]
 pub trait AsyncFnMut<In>: AsyncFnOnce<In> {
     async fn call_mut(&mut self, args: In) -> Self::Output;
 }
 
+/// The type implemented with this trait can be used multiple
+/// times with its states obtained by **shared** references.
+#[doc = include_str!("./doc/trait/no_lifetimes_fn.md")]
 pub trait AsyncFn<In>: AsyncFnMut<In> {
     async fn call(&self, args: In) -> Self::Output;
 }
 
+/// Generate a value that is of unnamed closure type implemented with
+/// [`AsyncFnOnce`].
+#[doc = include_str!("./doc/macro_syntax.md")]
+#[doc = include_str!("./doc/macro/lifetimes_details.md")]
 #[macro_export]
 macro_rules! async_owned_closure_once {
     (
@@ -35,6 +51,10 @@ macro_rules! async_owned_closure_once {
     }};
 }
 
+/// Generate a value that is of unnamed closure type implemented with
+/// [`AsyncFnMut`].
+#[doc = include_str!("./doc/macro_syntax.md")]
+#[doc = include_str!("./doc/macro/lifetimes_details.md")]
 #[macro_export]
 macro_rules! async_owned_closure_mut {
     (
@@ -64,6 +84,10 @@ macro_rules! async_owned_closure_mut {
     }};
 }
 
+/// Generate a value that is of unnamed closure type implemented with
+/// [`AsyncFn`].
+#[doc = include_str!("./doc/macro_syntax.md")]
+#[doc = include_str!("./doc/macro/lifetimes_details.md")]
 #[macro_export]
 macro_rules! async_owned_closure {
     (
