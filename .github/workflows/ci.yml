@@ -1,0 +1,14 @@
+name: test suite
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: cargo +nightly test --all-features
