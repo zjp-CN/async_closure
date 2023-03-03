@@ -61,7 +61,7 @@ The steps to use this crate:
         buf: &'a mut String = &mut buf, // mutable reference
         arc: Arc<str> = buffer.into(),  // owned type without explicit mutation
         len: usize = 0,                 // owned type with mutation, see the code below
-    }; async |arg: &str| -> Result<usize, Box<dyn Error>> 
+    }; async |arg: &str| -> Result<usize, ()> 
        // Annotate both inputs and output: no lifetime parameter on arguments' type!
     {
         // Write async code here, using the field names and argument names as variables.
@@ -71,13 +71,6 @@ The steps to use this crate:
         // If you use `async_closure!`, then `s: &&'a str`, `buf: &&'a mut String` etc.
         // If you use `async_closure_once!`, then `s: &'a str`, `buf: &'a mut String` etc.
 
-        tokio::spawn({
-            let arc = arc.clone();
-            async move { arc }
-        }).await?;
-        buf.push_str(arg);
-        dbg!(&arc, &buf, &s, &arg);
-        *len += arc.len() + buf.len() + s.len() + arg.len();
         Ok(*len)
     });
     ```
