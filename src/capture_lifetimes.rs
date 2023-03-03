@@ -57,6 +57,7 @@ macro_rules! async_closure_once {
 /// [`AsyncFnMut`].
 #[doc = include_str!("./doc/macro_syntax.md")]
 #[doc = include_str!("./doc/macro/lifetimes_details.md")]
+#[doc = include_str!("./doc/macro/lifetimes_examples_mut.md")]
 #[macro_export]
 macro_rules! async_closure_mut {
     (
@@ -91,6 +92,7 @@ macro_rules! async_closure_mut {
 /// [`AsyncFn`].
 #[doc = include_str!("./doc/macro_syntax.md")]
 #[doc = include_str!("./doc/macro/lifetimes_details.md")]
+#[doc = include_str!("./doc/macro/lifetimes_examples_fn.md")]
 #[macro_export]
 macro_rules! async_closure {
     (

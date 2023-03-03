@@ -1,5 +1,11 @@
 # `async_closure`
 
+[![GitHub issues](https://img.shields.io/github/issues/zjp-CN/async_closure)](https://github.com/zjp-CN/async_closure)
+[<img alt="github" src="https://img.shields.io/github/issues/zjp-CN/async_closure?color=db2043" height="20">](https://github.com/zjp-CN/async_closure/issues)
+[<img alt="build status" src="https://github.com/zjp-CN/async_closure/workflows/Release%20CI/badge.svg" height="20">](https://github.com/zjp-CN/async_closure/actions)
+[<img alt="crates.io" src="https://img.shields.io/crates/v/async_closure?style=flat&color=fc8d62&logo=rust&label=async_closure" height="20">](https://crates.io/crates/async_closure)
+[<img alt="docs.rs" src="https://img.shields.io/docsrs/async_closure" height="20">](https://docs.rs/async_closure)
+
 This crate utilizes the nightly-only feature [`async_fn_in_trait`] to imitate [async_closures].
 
 You don't have to Box the return Future from a local closure in async code this time!
@@ -149,6 +155,12 @@ The steps to use this crate:
 
   Impossible for now. See the second question above that gives a link to show traditional *well-known* stable ways,
   especially for non-capturing async callbacks/functions.
+
+  4. More examples?
+
+  Yes. It took me hours to write examples for each trait and macro. Besides have a look at [examples] folder.
+
+  [examples]: https://github.com/zjp-CN/async_closure/tree/main/examples
 
 </details>
 

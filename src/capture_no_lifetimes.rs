@@ -27,6 +27,7 @@ pub trait AsyncFn<In>: AsyncFnMut<In> {
 /// [`AsyncFnOnce`].
 #[doc = include_str!("./doc/macro_syntax.md")]
 #[doc = include_str!("./doc/macro/lifetimes_details.md")]
+#[doc = include_str!("./doc/macro/no_lifetimes_examples_once.md")]
 #[macro_export]
 macro_rules! async_owned_closure_once {
     (
@@ -55,6 +56,7 @@ macro_rules! async_owned_closure_once {
 /// [`AsyncFnMut`].
 #[doc = include_str!("./doc/macro_syntax.md")]
 #[doc = include_str!("./doc/macro/lifetimes_details.md")]
+#[doc = include_str!("./doc/macro/no_lifetimes_examples_mut.md")]
 #[macro_export]
 macro_rules! async_owned_closure_mut {
     (
@@ -88,6 +90,7 @@ macro_rules! async_owned_closure_mut {
 /// [`AsyncFn`].
 #[doc = include_str!("./doc/macro_syntax.md")]
 #[doc = include_str!("./doc/macro/lifetimes_details.md")]
+#[doc = include_str!("./doc/macro/no_lifetimes_examples_fn.md")]
 #[macro_export]
 macro_rules! async_owned_closure {
     (
