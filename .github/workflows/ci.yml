@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@nightly
-      - run: sh run.sh
+      - run: sh .github/workflows/run.sh
