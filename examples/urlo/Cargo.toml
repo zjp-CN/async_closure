@@ -1,0 +1,13 @@
+[package]
+name = "urlo"
+version = "0.1.0"
+edition = "2021"
+description = "Usecases solved on https://users.rust-lang.org/"
+
+[dependencies]
+async_closure = { path = "../../" }
+
+pollster = { version = "0.3", features = ["macro"] }
+serde = { version = "1", features = ["derive"] }
+async-lock = "2"
+serde_json = "1"
