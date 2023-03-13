@@ -10,7 +10,16 @@ do
       ;;
 
     *)
-      cd examples/$example && cargo r && cd ../../
+      cd examples/$example
+
+      cargo r
+
+      for example in $(ls examples/)
+      do
+        cargo run --example ${example%%.rs}
+      done
+
+      cd ../../
   esac
 done
 
