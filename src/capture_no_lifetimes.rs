@@ -4,23 +4,23 @@
 /// The type implemented with this trait can be only used once
 /// with its states obtained **by value**.
 #[doc = include_str!("./doc/trait/no_lifetimes_fnonce.md")]
-pub trait AsyncFnOnce<In> {
+pub trait AsyncFnOnce<Args> {
     type Output;
-    async fn call_once(self, args: In) -> Self::Output;
+    async fn call_once(self, args: Args) -> Self::Output;
 }
 
 /// The type implemented with this trait can be used multiple
 /// times with its states obtained by **exclusive** references.
 #[doc = include_str!("./doc/trait/no_lifetimes_fnmut.md")]
-pub trait AsyncFnMut<In>: AsyncFnOnce<In> {
-    async fn call_mut(&mut self, args: In) -> Self::Output;
+pub trait AsyncFnMut<Args>: AsyncFnOnce<Args> {
+    async fn call_mut(&mut self, args: Args) -> Self::Output;
 }
 
 /// The type implemented with this trait can be used multiple
 /// times with its states obtained by **shared** references.
 #[doc = include_str!("./doc/trait/no_lifetimes_fn.md")]
-pub trait AsyncFn<In>: AsyncFnMut<In> {
-    async fn call(&self, args: In) -> Self::Output;
+pub trait AsyncFn<Args>: AsyncFnMut<Args> {
+    async fn call(&self, args: Args) -> Self::Output;
 }
 
 /// Generate a value that is of unnamed closure type implemented with
