@@ -5,15 +5,15 @@
 #![allow(incomplete_features)]
 use async_closure::async_owned_closure_mut;
 
-// correspond to `capture_no_lifetimes::AsyncFnMut<'env, (), usize>`
+// correspond to `capture_no_lifetimes::AsyncFnMut<(), usize>`
 // note that the concept of arguments is represented by a tuple
 async_owned_closure_mut!({}; async | | -> usize { 0 }); 
 
-// `for<'any> capture_no_lifetimes::AsyncFnMut<'env, (&'any str,), usize>`
+// `for<'any> capture_no_lifetimes::AsyncFnMut<(&'any str,), usize>`
 // note that single argument is represented by `(type,)` where the comma is important
 async_owned_closure_mut!({}; async |_s: &str| -> usize { 0 }); 
 
-// `for<'any> capture_no_lifetimes::AsyncFnMut<'env, (&'any str, &'any mut Vec<u8>), ()>`
+// `for<'any> capture_no_lifetimes::AsyncFnMut<(&'any str, &'any mut Vec<u8>), ()>`
 async_owned_closure_mut!({}; async |_s: &str, _buf: &mut Vec<u8>| -> () {}); 
 
 // etc.
