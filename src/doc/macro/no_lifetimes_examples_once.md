@@ -9,7 +9,7 @@ use async_closure::async_owned_closure_once;
 // note that the concept of arguments is represented by a tuple
 async_owned_closure_once!({}; async | | -> usize { 0 }); 
 
-// `for<'any> capture_no_lifetimes::AsyncFnOnce< (&'any str,), usize>`
+// `for<'any> capture_no_lifetimes::AsyncFnOnce<(&'any str,), usize>`
 // note that single argument is represented by `(type,)` where the comma is important
 async_owned_closure_once!({}; async |_s: &str| -> usize { 0 }); 
 

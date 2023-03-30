@@ -151,9 +151,10 @@ The steps to use this crate:
 
   4. More examples?
 
-  Yes. It took me hours to write examples for each trait and macro. Besides have a look at [examples] folder.
+  Yes. Each trait and macro has its own usecase in details. Also have a look at [examples] folder which comes from
+  URLO as a solution to some snippet question.
 
-  [examples]: https://github.com/zjp-CN/async_closure/tree/main/examples
+  [examples]: https://github.com/zjp-CN/async_closure/blob/main/examples/urlo/src/main.rs
 
 </details>
 
