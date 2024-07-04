@@ -6,6 +6,9 @@
 [<img alt="crates.io" src="https://img.shields.io/crates/v/async_closure?style=flat&color=fc8d62&logo=rust&label=async_closure" height="20">](https://crates.io/crates/async_closure)
 [<img alt="docs.rs" src="https://img.shields.io/docsrs/async_closure" height="20">](https://docs.rs/async_closure)
 
+> Warning: this library is deprecated due to async_fn_in_trait breakage. Refer to 
+> [#1](https://github.com/zjp-CN/async_closure/pull/1#issuecomment-2208579976) for alternatives.
+
 This crate utilizes the nightly-only feature [`async_fn_in_trait`] to imitate [async_closures].
 
 You don't have to Box the return Future from a local closure in async code this time!
