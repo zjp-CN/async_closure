@@ -2,6 +2,7 @@
 // #![feature(async_fn_in_trait)]
 // #![allow(incomplete_features)]
 #![forbid(unsafe_code)]
+#![no_std]
 
 pub mod capture_lifetimes;
 
